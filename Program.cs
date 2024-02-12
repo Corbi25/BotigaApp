@@ -1,5 +1,10 @@
-﻿bool correcte = false;
-string[] productesBotiga = null;
+﻿using System.Text.RegularExpressions;
+
+bool correcte = false;
+string[] productesBotiga = null; //Nom productes
+double[] preusArray = new double[0]; // Preus dels prodcutes
+int[] nElemBotiga = new int[2]; // Numero Elements de prodcutes
+
 while (!correcte)
 {
     Console.WriteLine("+--------------------------------+");
@@ -10,14 +15,18 @@ while (!correcte)
     Console.WriteLine("| 3. Sortir                      |");
     Console.WriteLine("+--------------------------------+");
     int num = Int32.Parse(Console.ReadLine());
+    Console.Clear();
     switch (num)
     {
         case 1:
-            BotigaMenu(correcte);
+            BotigaMenu(correcte, nElemBotiga, preusArray, productesBotiga);
             TornarMenu();
             break;
         case 2:
 
+            break;
+        case 3:
+            correcte = true;
             break;
     }
 }
@@ -31,7 +40,7 @@ static int TornarMenu()
     Console.Clear();
     return 0;
 }
-static bool BotigaMenu(bool correcte)
+static bool BotigaMenu(bool correcte, int[] nElemBotiga, double[] preusArray, string[] productesBotiga)
 {
     Console.WriteLine("+-----------------------------------------------------+");
     Console.WriteLine("|               Benvolgut a la botiga                 |");
@@ -51,10 +60,51 @@ static bool BotigaMenu(bool correcte)
     switch (num)
     {
         case 1:
+            Console.WriteLine("Quin prodcute vols afegir?");
+            string producte = Console.ReadLine();
+            Console.WriteLine("Preu per unitat del producte?");
+            double preu = Double.Parse(Console.ReadLine());
+            do
+            {
+                Console.WriteLine("El preu és incorrecte...");
+                preu = Double.Parse(Console.ReadLine());
 
+            } while (!PreuCorrecte(preu));
+            if (nElemBotiga.Length > preusArray.Length)
+            {
+
+            }
+            else if (nElemBotiga.Length <= preusArray.Length)
+            {
+                Console.WriteLine("Tenim la botiga plena, vols ampliarla? (s/n)");
+                string sino = Console.ReadLine();
+                if (sino == "s")
+                {
+                    OnColocar(nElemBotiga, preusArray, productesBotiga);
+                }
+            }
             break;
     }
     return correcte;
+}
+static bool PreuCorrecte(double preu)
+{
+    string patro = @"^\$?\d+(\.\d{1,2})?$";
+    string preuString = preu.ToString();
+    return Regex.IsMatch(patro, preuString);
+}
+static int OnColocar(int[] nElemBotiga, double[] preusArray, string[] productesBotiga)
+{
+    int posicio = 0;
+    for (int i = 0; i >= nElemBotiga.Length; i++)
+    {
+        if (preusArray[i] == 0.00)
+        {
+            posicio = i;
+            i = nElemBotiga.Length;
+        }
+    }
+    return posicio;
 }
 static bool CistellaMenu(bool correcte)
 {
